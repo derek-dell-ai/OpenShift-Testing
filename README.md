@@ -1,0 +1,1 @@
+Testing deployments with Openshift
