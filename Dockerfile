@@ -2,17 +2,16 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Copy files
+# Install runtime deps
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy just the server code
 COPY app.py .
 
-# Copy model into the container
-COPY tinyllama-dell-fast-final /app/tinyllama-dell-fast-final
+# Model will be mounted from a PVC at runtime:
+# set a default that matches your mount path
+ENV MODEL_DIR=/models/tinyllama/tinyllama-dell-fast-final
 
-# Expose port
 EXPOSE 8000
-
-# Run API server
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn","app:app","--host","0.0.0.0","--port","8000"]
